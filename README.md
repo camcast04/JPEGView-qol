@@ -52,6 +52,22 @@ Only needed if you want to modify the code or no zip is available.
 
 ## The custom crop workflow
 
+A typical photo, start to finish:
+
+1. Open the photo (double-click it, or drag it onto JPEGView).
+2. Drag a box around the subject with the left mouse button — hold `Shift` at any
+   point to make the box a perfect square (iNaturalist shows photos square).
+3. Let go of the mouse. The box stays: drag inside it to move it, drag a corner to
+   resize it, tap `Shift` to re-square it.
+4. Press `Ctrl+?` — the photo is cropped to the box.
+5. Press `Ctrl+Up` — the file is saved (overwrites the original, no questions asked).
+6. Press `→` for the next photo and repeat.
+
+Made a mistake? `Esc` cancels a selection, and `Ctrl+R` reloads the original file as
+long as you haven't saved yet.
+
+All the controls:
+
 | Key / action | What it does |
 |---|---|
 | drag with left mouse | select an area — it stays on screen after you release the button |
@@ -72,7 +88,7 @@ keys in JPEGView) is on `Ctrl+1`...`Ctrl+9` here, since the plain digits select 
 
 A preset key (`1`, `2`, ...) sticks until you change it: press it once, then every
 selection you draw keeps that shape. Cropping changes what's on screen; press `Ctrl+Up`
-or `Ctrl+S` to actually save the file.
+to actually save the file.
 
 Prefer the crop to happen the instant you release the mouse, with no adjusting step?
 Open `JPEGView.ini` (next to the exe, or in `%APPDATA%\JPEGView\`) and set
