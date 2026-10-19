@@ -147,10 +147,19 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		return NULL;
 	}
 
+	// Reset file attributes to normal to ensure we can write to it
+	::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
-		TurboJpeg::Free(pTargetStream);
-		return NULL;
+		// Try one more time with different flags if that failed
+		_tremove(sFileName);
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+		fptr = _tfopen(sFileName, _T("wb"));
+		if (fptr == NULL) {
+			TurboJpeg::Free(pTargetStream);
+			return NULL;
+		}
 	}
 
 	// If EXIF data is present, replace any JFIF block by this EXIF block to preserve the EXIF information
@@ -228,9 +237,18 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 // pData must point to 24 bit BGR DIB
 static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bool bUseLosslessWEBP) {
+	// Reset file attributes to normal to ensure we can write to it
+	::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+	
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
-		return false;
+		// Try one more time with different flags if that failed
+		_tremove(sFileName);
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+		fptr = _tfopen(sFileName, _T("wb"));
+		if (fptr == NULL) {
+			return false;
+		}
 	}
 
 	bool bSuccess = false;
@@ -257,9 +275,18 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bo
 
 // pData must point to 24 bit BGR DIB
 static bool SaveQOI(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
+	// Reset file attributes to normal to ensure we can write to it
+	::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+	
 	FILE* fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
-		return false;
+		// Try one more time with different flags if that failed
+		_tremove(sFileName);
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+		fptr = _tfopen(sFileName, _T("wb"));
+		if (fptr == NULL) {
+			return false;
+		}
 	}
 
 	bool bSuccess = false;
@@ -311,6 +338,12 @@ static int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) {
 
 // Saves the given 24 bpp DIB data to the file name given using GDI+
 static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData, int nWidth, int nHeight) {
+	// Reset file attributes to normal to ensure we can write to it
+	::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+	
+	// Try to remove the file first if it exists
+	_tremove(sFileName);
+	
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), PixelFormat24bppRGB, (BYTE*)pData);
 	if (pBitmap->GetLastStatus() != Gdiplus::Ok) {
 		delete pBitmap;

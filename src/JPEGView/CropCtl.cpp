@@ -56,6 +56,8 @@ CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 	m_sizeImageAspectRatio = { 0 };
 	m_bCropRectAspectRatioReversed = false;
 	m_eCropMode = CM_Free;
+	m_ePrevCropMode = CM_Free;
+	m_bTempSquareMode = false;
 	m_nHandleSize = HANDLE_SIZE;
 	m_eHitHandle = HH_None;
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
@@ -190,6 +192,15 @@ void CCropCtl::StartCropping(int nX, int nY) {
 			m_cropEnd = CPoint(INT_MIN, INT_MIN);
 			m_nHandleSize = HelpersGUI::ScaleToScreen(HANDLE_SIZE);
 			if ((m_nHandleSize & 1) == 0) m_nHandleSize++; // must be odd
+			
+			// Check if shift key is pressed - if so, change to 1:1 aspect ratio mode
+			bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+			if (bShift && !m_bTempSquareMode) {
+				// Save previous mode to restore it after crop
+				m_ePrevCropMode = m_eCropMode;
+				m_bTempSquareMode = true;
+				SetCropRectAR(CSize(1, 1)); // Set to 1:1 square ratio
+			}
 		}
 	}
 }
@@ -199,8 +210,34 @@ bool CCropCtl::DoCropping(int nX, int nY) {
 		SetMouseCursor(nX, nY);
 	}
 	if (m_bDoTracking) {
+		// Check if shift key is pressed - if so, temporarily change to 1:1 aspect ratio
+		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+		if (bShift && !m_bTempSquareMode) {
+			// Save previous mode to restore it after crop
+			m_ePrevCropMode = m_eCropMode;
+			m_bTempSquareMode = true;
+			SetCropRectAR(CSize(1, 1)); // Set to 1:1 square ratio
+		} else if (!bShift && m_bTempSquareMode) {
+			// If shift is released and we were in temporary 1:1 mode, restore previous mode
+			m_eCropMode = m_ePrevCropMode;
+			m_bTempSquareMode = false;
+		}
+
 		TrackCroppingRect(nX, nY, m_eHitHandle);
 	} else if (m_eHitHandle == HH_None) {
+		// Check if shift key is pressed - if so, temporarily change to 1:1 aspect ratio
+		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+		if (bShift && !m_bTempSquareMode) {
+			// Save previous mode to restore it after crop
+			m_ePrevCropMode = m_eCropMode;
+			m_bTempSquareMode = true;
+			SetCropRectAR(CSize(1, 1)); // Set to 1:1 square ratio
+		} else if (!bShift && m_bTempSquareMode) {
+			// If shift is released and we were in temporary 1:1 mode, restore previous mode
+			m_eCropMode = m_ePrevCropMode;
+			m_bTempSquareMode = false;
+		}
+
 		UpdateCroppingRect(nX, nY, NULL, true);
 	}
 	if (m_bDoCropping || m_bDoTracking) {
@@ -212,12 +249,18 @@ bool CCropCtl::DoCropping(int nX, int nY) {
 	return m_bTrackingMode;
 }
 
-// show/hide popup menu, if hidden, can be used to immediately zoom
 void CCropCtl::EndCropping(bool bShowMenu) {
 	if (m_eHitHandle != HH_None) {
 		m_bDontStartCropOnNextClick = true;
 		m_bDoTracking = false;
 		NormalizeCroppingRect();
+
+		// If we were in temporary 1:1 aspect ratio mode due to shift, restore the previous mode
+		if (m_bTempSquareMode) {
+			m_eCropMode = m_ePrevCropMode;
+			m_bTempSquareMode = false;
+		}
+
 		return;
 	}
 	bool bCropRectSmall = PointDifferenceSmall(m_cropMouse, m_pMainDlg->GetMousePos());
@@ -232,12 +275,30 @@ void CCropCtl::EndCropping(bool bShowMenu) {
 			m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
 		}
 		m_pMainDlg->GetZoomNavigatorCtl()->InvalidateZoomNavigatorRect();
+
+		// If we were in temporary 1:1 aspect ratio mode due to shift, restore the previous mode
+		if (m_bTempSquareMode) {
+			m_eCropMode = m_ePrevCropMode;
+			m_bTempSquareMode = false;
+		}
+
 		return;
 	}
 
-	// Display the crop menu
+	// If we were in temporary 1:1 aspect ratio mode due to shift, restore the previous mode
+	// (the crop rectangle is already fixed at this point, only the mode for the next crop is restored)
+	if (m_bTempSquareMode) {
+		m_eCropMode = m_ePrevCropMode;
+		m_bTempSquareMode = false;
+	}
+
 	if (bShowMenu) {
-		ShowCropContextMenu();
+		if (CSettingsProvider::This().AutoCropOnMouseRelease()) {
+			// Releasing the left mouse button crops immediately (AutoCropOnMouseRelease INI setting).
+			m_pMainDlg->ExecuteCommand(IDM_CROP_SEL);
+		} else {
+			ShowCropContextMenu();
+		}
 	}
 }
 

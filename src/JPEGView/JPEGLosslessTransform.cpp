@@ -106,6 +106,9 @@ static bool _WriteFile(LPCTSTR sFileName, unsigned char* pBuffer, unsigned int n
 		bRestoreWriteTime = ::GetFileTime(hFile, NULL, NULL, &lastWriteTime);
 		::CloseHandle(hFile);
 		sTempEnding = _T(".tmp");
+		
+		// Reset file attributes to normal to ensure we can delete it if needed
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
 	}
 
 	// For security reasons, we never write to an existing file. So generate a tmp file if the file already exists.
@@ -113,7 +116,13 @@ static bool _WriteFile(LPCTSTR sFileName, unsigned char* pBuffer, unsigned int n
 	CString sNewFileName = CString(sFileName) + sTempEnding;
 	hFile = ::CreateFile(sNewFileName, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		return false;
+		// If we couldn't create the file, try again with direct write by removing any read-only attributes
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);
+		hFile = ::CreateFile(sFileName, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) {
+			return false;
+		}
+		sTempEnding = _T("");  // No temp file being used
 	}
 
 	unsigned int nNumBytesWritten;
@@ -127,6 +136,7 @@ static bool _WriteFile(LPCTSTR sFileName, unsigned char* pBuffer, unsigned int n
 
 	// If the file was written to a temporary file and it succeeded, replace now the existing file with the temporary
 	if (bOk && sTempEnding[0] != 0) {
+		::SetFileAttributes(sFileName, FILE_ATTRIBUTE_NORMAL);  // Ensure the target file can be deleted
 		bOk = ::DeleteFile(sFileName);
 		if (bOk) {
 			bOk = ::MoveFile(sNewFileName, sFileName);

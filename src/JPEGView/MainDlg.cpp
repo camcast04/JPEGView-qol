@@ -1948,6 +1948,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect(false));
 				m_pImageProcPanelCtl->ShowHideSaveDBButtons();
+				m_pCropCtl->AbortCropping(); // Clear the selection after cropping
 				this->Invalidate(FALSE);
 				AdjustWindowToImage(false);
 			}

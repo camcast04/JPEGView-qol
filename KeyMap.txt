@@ -1,0 +1,28 @@
+// This file defines custom key mapping for JPEGView
+// See KeyMap-README.html for more information on how to customize this file.
+
+// Map M to crop the selected area
+M                       IDM_CROP_SEL
+
+// Map Ctrl+Up to save without prompt
+Ctrl+Up                 IDM_SAVE_ALLOW_NO_PROMPT
+
+// Map Ctrl+Shift+Up to open save dialog (same as Ctrl+S)
+Ctrl+Shift+Up           IDM_SAVE
+
+// Map X to sort by modification date (original M function)
+X                       IDM_SORT_MOD_DATE
+
+// Restore original rotation shortcuts
+Up                      IDM_ROTATE_270
+Down                    IDM_ROTATE_90
+
+// Crop mode presets: press a digit, then drag a selection - the crop happens when the mouse button is released
+// (see AutoCropOnMouseRelease in JPEGView.ini). Holding Shift while dragging forces a square selection once.
+1                       IDM_CROPMODE_1_1
+2                       IDM_CROPMODE_4_3
+3                       IDM_CROPMODE_3_2
+4                       IDM_CROPMODE_16_9
+5                       IDM_CROPMODE_IMAGE
+9                       IDM_CROPMODE_FIXED_SIZE
+0                       IDM_CROPMODE_FREE

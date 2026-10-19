@@ -441,6 +441,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
 	m_bDefaultSelectionMode = GetBool(_T("DefaultSelectionMode"), true);
+	m_bAutoCropOnMouseRelease = GetBool(_T("AutoCropOnMouseRelease"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bKeepParams = GetBool(_T("KeepParameters"), false);

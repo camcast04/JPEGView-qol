@@ -68,32 +68,37 @@ private:
 	CMainDlg* m_pMainDlg;
 	CPoint m_cropStart;
 	CPoint m_cropEnd;
+	CPoint m_cropMouse;
+	CPoint m_startTrackMousePos;
+
+	// for tracking
+	double m_dLastZoom;
+
+	double GetCropRectAR(void);
+
+	CSize m_sizeCropRectAspectRatio;
+	CSize m_sizeImageAspectRatio;
+	bool m_bCropRectAspectRatioReversed; // track when an aspect ratio got inverted due to pulling bottom-right
+
+	CropMode m_eCropMode;
+	CropMode m_ePrevCropMode; // Store previous crop mode when temporarily using 1:1 aspect ratio with Shift key
+	bool m_bTempSquareMode; // true while Shift temporarily forces a 1:1 crop (so a deliberately chosen 1:1 mode is not reset)
+	int m_nHandleSize;
+	Handle m_eHitHandle;
+
 	bool m_bCropping;
 	bool m_bDoCropping;
 	bool m_bDoTracking;
 	bool m_bTrackingMode;
 	bool m_bDontStartCropOnNextClick;
-	CPoint m_cropMouse;
-	CPoint m_startTrackMousePos;
-	
-	CSize m_sizeCropRectAspectRatio;  // used for comparisons with menu options
-	CSize m_sizeImageAspectRatio;     // set after loading image, only used when m_eCropMode == CM_FixedAspectRatioImage
-	bool m_bCropRectAspectRatioReversed; // are the crop aspect ratio x, y values reversed?
-
-	double m_dLastZoom;
-	int m_nHandleSize;
-	Handle m_eHitHandle;
-	CropMode m_eCropMode;
 
 	void TrackCroppingRect(int nX, int nY, Handle eHandle);
 	void UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
+	CRect GetScreenCropRect();
 	void PaintCropRect(HDC hPaintDC);
 	void InvalidateSceenCropRect();
-	CRect GetScreenCropRect();
 	CPoint ScreenToImage(int nX, int nY);
 	CPoint PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool adjustWidth, bool bCalculateEnd);
 	void NormalizeCroppingRect();
 	void SetMouseCursor(int nX, int nY);
-
-	double GetCropRectAR(void);
 };
