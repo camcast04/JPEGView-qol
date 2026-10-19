@@ -311,8 +311,24 @@ void CCropCtl::EndCropping(bool bShowMenu) {
 }
 
 bool CCropCtl::SnapSelectionToSquare() {
-	if (!m_bCropping || m_bDoCropping || m_bDoTracking || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
-		return false; // no selection, or still being dragged (the drag code itself handles Shift)
+	if (!m_bCropping || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+		return false; // no selection yet
+	}
+	if (m_bDoCropping && m_eHitHandle == HH_None) {
+		// Shift pressed while the initial drag is holding still: DoCropping() only runs on mouse
+		// moves, so engage the temporary 1:1 mode and reshape the rectangle right away.
+		if (!m_bTempSquareMode) {
+			m_ePrevCropMode = m_eCropMode;
+			m_bTempSquareMode = true;
+			SetCropRectAR(CSize(1, 1));
+		}
+		CPoint mousePos = m_pMainDlg->GetMousePos();
+		UpdateCroppingRect(mousePos.x, mousePos.y, NULL, true);
+		m_pMainDlg->Invalidate(FALSE);
+		return true;
+	}
+	if (m_bDoCropping || m_bDoTracking) {
+		return false; // dragging a handle: the tracking code handles Shift on mouse move
 	}
 	CJPEGImage* pImage = m_pMainDlg->GetCurrentImage();
 	if (pImage == NULL) {
@@ -751,6 +767,10 @@ CCropCtl::Handle CCropCtl::HitHandle(int nX, int nY) {
 			}
 		}
 	} else {
+		// Clicking (or hovering) inside the selection grabs the whole rectangle so it can be moved
+		if (!cropRect.IsRectNull() && cropRect.PtInRect(CPoint(nX, nY))) {
+			return HH_Border;
+		}
 		return HH_None;
 	}
 }
