@@ -67,7 +67,8 @@ Only needed if you want to modify the code or no zip is available.
 | `0` | back to free-form selection |
 
 Other shortcuts: `Ctrl+Up` saves instantly without a prompt, `Ctrl+Shift+Up` opens the
-save-as dialog, `X` sorts files by modification date. The slideshow (normally plain digit
+save-as dialog, `E` opens the Change size (resize) dialog, `X` sorts files by
+modification date. The slideshow (normally plain digit
 keys in JPEGView) is on `Ctrl+1`...`Ctrl+9` here, since the plain digits select crop shapes.
 
 A preset key (`1`, `2`, ...) sticks until you change it: press it once, then every

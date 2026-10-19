@@ -1,6 +1,9 @@
 // This file defines custom key mapping for JPEGView
 // See KeyMap-README.html for more information on how to customize this file.
 
+// Map E to open the Change size (resize) dialog directly
+E                       IDM_CHANGESIZE
+
 // Map Ctrl+X and M to crop the selected area
 Ctrl+X                  IDM_CROP_SEL
 M                       IDM_CROP_SEL
