@@ -32,7 +32,7 @@ F4                      IDM_KEEP_PARAMETERS
 F5                      IDM_AUTO_CORRECTION
 Shift+F5                IDM_AUTO_CORRECTION_SECTION
 F6                      IDM_LDC
-Ctrl+Shift+F6           IDM_LDC_HIGHLIGHTS_INC
+Shift+Ctrl+F6           IDM_LDC_HIGHLIGHTS_INC
 Ctrl+F6                 IDM_LDC_SHADOWS_INC
 Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
 Alt+F6                  IDM_LDC_SHADOWS_DEC
@@ -40,7 +40,6 @@ F7                      IDM_LOOP_FOLDER
 F8                      IDM_LOOP_RECURSIVELY
 F9                      IDM_LOOP_SIBLINGS
 F11                     IDM_FULL_SCREEN_MODE
-Shift+F11               IDM_HIDE_TITLE_BAR
 Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
 F12                     IDM_SPAN_SCREENS
 Ctrl+F12                IDM_TOGGLE_MONITOR
@@ -54,21 +53,17 @@ Shift+Down              IDM_PAN_DOWN
 Shift+Left              IDM_PAN_LEFT
 Shift+Right             IDM_PAN_RIGHT
 Ctrl+Down               IDM_ZOOM_DEC
-Ctrl+Up                 IDM_SAVE_ALLOW_NO_PROMPT
-Ctrl+Shift+Up           IDM_SAVE
 Ctrl+A                  IDM_EXCHANGE_PROC_PARAMS
 Ctrl+C                  IDM_COPY
-Ctrl+Shift+C            IDM_COPY_PATH
 C                       IDM_SORT_CREATION_DATE
 Ctrl+N                  IDM_SHOW_NAVPANEL
 N                       IDM_SORT_NAME
 Ctrl+M                  IDM_MARK_FOR_TOGGLE
 Ctrl+Shift+M            IDM_TOUCH_IMAGE
-M                       IDM_CROP_SEL
-X                       IDM_SORT_MOD_DATE
+M                       IDM_SORT_MOD_DATE
 Z                       IDM_SORT_RANDOM
-Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
-Ctrl+Shift+S            IDM_SAVE_SCREEN
+Ctrl+Up                 IDM_SAVE_ALLOW_NO_PROMPT
+Ctrl+Shift+Up           IDM_SAVE_SCREEN
 S                       IDM_SAVE_PARAM_DB
 D                       IDM_CLEAR_PARAM_DB
 Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
@@ -76,18 +71,25 @@ Ctrl+O                  IDM_OPEN
 Ctrl+P                  IDM_PRINT
 Ctrl+R                  IDM_RELOAD
 Alt+R                   IDM_SLIDESHOW_RESUME
-Ctrl+X                  IDM_CROP_SEL
+Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
 T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
 W                       IDM_EXPLORE
-E                       IDM_CHANGESIZE
 Shift+F12               IDM_ALWAYS_ON_TOP
 
-// Crop mode presets: press a digit to lock the selection shape, drag a selection, adjust it after releasing
-// the mouse, then press Ctrl+X (or M) to crop (see AutoCropOnMouseRelease in JPEGView.ini for instant crop).
-// Holding Shift while dragging forces a square selection once.
+// ===== Custom crop workflow =====
+// Drag a selection (hold Shift before or during the drag for a square), adjust it after
+// releasing the mouse, then crop with Ctrl+? (crops on screen only - Ctrl+Up saves the file).
+Ctrl+Question           IDM_CROP_SEL
+Ctrl+Shift+Question     IDM_CROP_SEL
+
+// Open the Change size (resize) dialog directly
+P                       IDM_CHANGESIZE
+
+// Crop shape presets: press a digit to lock the selection shape for all following selections.
+// The slideshow (normally on the plain digits) is on Ctrl+1..Ctrl+9 instead.
 1                       IDM_CROPMODE_1_1
 2                       IDM_CROPMODE_4_3
 3                       IDM_CROPMODE_3_2

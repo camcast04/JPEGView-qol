@@ -2,7 +2,7 @@
 
 A lean, fast Windows image viewer customized for quick photo cropping for
 iNaturalist uploads. Open a photo, drag a box (hold `Shift` to make it square),
-nudge it into place, press `Ctrl+X` — cropped. `Ctrl+Up` saves instantly.
+nudge it into place, press `Ctrl+?` — cropped. `Ctrl+Up` saves instantly.
 That's the whole workflow.
 
 **Tip: you can copy-paste this whole page into Claude and ask it to help you set
@@ -55,10 +55,10 @@ Only needed if you want to modify the code or no zip is available.
 | Key / action | What it does |
 |---|---|
 | drag with left mouse | select an area — it stays on screen after you release the button |
-| `Shift` (while dragging, or with a finished selection) | snap the selection to a square just this once |
+| `Shift` (before the drag, during it, or with a finished selection) | snap the selection to a square just this once |
 | drag inside the selection | move it around |
 | drag its corners/edges | resize it |
-| `Ctrl+X` (or `M`) | **crop to the selection** |
+| `Ctrl+?` | **crop to the selection** |
 | `Esc` (or click outside it) | cancel the selection |
 | `1` | lock the selection shape to 1:1 square (what iNaturalist displays) |
 | `2` / `3` / `4` | lock it to 4:3 / 3:2 / 16:9 |
@@ -66,9 +66,8 @@ Only needed if you want to modify the code or no zip is available.
 | `9` | lock it to an exact pixel size (a dialog asks for the size) |
 | `0` | back to free-form selection |
 
-Other shortcuts: `Ctrl+Up` saves instantly without a prompt, `Ctrl+Shift+Up` opens the
-save-as dialog, `E` opens the Change size (resize) dialog, `X` sorts files by
-modification date. The slideshow (normally plain digit
+Other shortcuts: `Ctrl+Up` saves instantly without a prompt, `Ctrl+Shift+Up` saves what's
+on screen, `P` opens the Change size (resize) dialog. The slideshow (normally plain digit
 keys in JPEGView) is on `Ctrl+1`...`Ctrl+9` here, since the plain digits select crop shapes.
 
 A preset key (`1`, `2`, ...) sticks until you change it: press it once, then every
