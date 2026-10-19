@@ -10,6 +10,21 @@ everything up — it has all the context Claude needs.**
 
 ## Installing it on your own computer
 
+### Step 0 - Remove the old JPEGView first
+
+If you already have the original JPEGView (e.g. from SourceForge), clear it out first
+so its leftovers don't fight with this version:
+
+1. Check **Settings → Apps → Installed apps**, search for "JPEGView". If it's listed,
+   uninstall it there. If it's not listed, it was the portable version: just find the
+   folder you ran `JPEGView.exe` from and delete the whole folder.
+2. **Important:** also delete the old settings folder if it exists. Press `Win+R`, type
+   `%APPDATA%` and press Enter, then delete the `JPEGView` folder in there. If old
+   settings stay behind, they override the new version's shortcuts and things like the
+   crop keys won't work.
+3. Don't worry about your photos — JPEGView never stores or moves them; deleting the
+   app and its settings touches nothing else.
+
 ### Option A - Install the ready-made build (recommended, ~2 minutes)
 
 No installer needed; JPEGView is fully portable.
