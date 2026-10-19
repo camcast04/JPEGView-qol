@@ -1,8 +1,9 @@
 # Our customized JPEGView
 
 A lean, fast Windows image viewer customized for quick photo cropping for
-iNaturalist uploads. Open a photo, press a number key to pick a crop shape,
-drag a box, let go — cropped. `Ctrl+Up` saves instantly. That's the whole workflow.
+iNaturalist uploads. Open a photo, drag a box (hold `Shift` to make it square),
+nudge it into place, press `Ctrl+X` — cropped. `Ctrl+Up` saves instantly.
+That's the whole workflow.
 
 **Tip: you can copy-paste this whole page into Claude and ask it to help you set
 everything up — it has all the context Claude needs.**
@@ -53,26 +54,29 @@ Only needed if you want to modify the code or no zip is available.
 
 | Key / action | What it does |
 |---|---|
-| drag with left mouse | select an area — **the crop happens the moment you release the button** |
-| `1` | crop box locked to 1:1 square (what iNaturalist displays) |
-| `2` / `3` / `4` | crop box locked to 4:3 / 3:2 / 16:9 |
-| `5` | crop box locked to the image's own aspect ratio |
-| `9` | crop box locked to an exact pixel size (a dialog asks for the size) |
-| `0` | back to free-form cropping |
-| hold `Shift` while dragging | force a square selection just this once |
-| `Esc` while dragging | cancel the selection |
-| `M` | crop the current selection (only needed if auto-crop is turned off) |
+| drag with left mouse | select an area — it stays on screen after you release the button |
+| `Shift` (while dragging, or with a finished selection) | snap the selection to a square just this once |
+| drag inside the selection | move it around |
+| drag its corners/edges | resize it |
+| `Ctrl+X` (or `M`) | **crop to the selection** |
+| `Esc` (or click outside it) | cancel the selection |
+| `1` | lock the selection shape to 1:1 square (what iNaturalist displays) |
+| `2` / `3` / `4` | lock it to 4:3 / 3:2 / 16:9 |
+| `5` | lock it to the image's own aspect ratio |
+| `9` | lock it to an exact pixel size (a dialog asks for the size) |
+| `0` | back to free-form selection |
 
 Other shortcuts: `Ctrl+Up` saves instantly without a prompt, `Ctrl+Shift+Up` opens the
-save-as dialog, `X` sorts files by modification date.
+save-as dialog, `X` sorts files by modification date. The slideshow (normally plain digit
+keys in JPEGView) is on `Ctrl+1`...`Ctrl+9` here, since the plain digits select crop shapes.
 
-A preset key (`1`, `2`, ...) sticks until you change it: press it once, then every crop
-you draw keeps that shape. Cropping changes what's on screen; press `Ctrl+Up` or `Ctrl+S`
-to actually save the file.
+A preset key (`1`, `2`, ...) sticks until you change it: press it once, then every
+selection you draw keeps that shape. Cropping changes what's on screen; press `Ctrl+Up`
+or `Ctrl+S` to actually save the file.
 
-To turn off auto-crop-on-release and get the stock JPEGView behavior back, open
-`JPEGView.ini` (next to the exe, or in `%APPDATA%\JPEGView\`) and set
-`AutoCropOnMouseRelease=false`.
+Prefer the crop to happen the instant you release the mouse, with no adjusting step?
+Open `JPEGView.ini` (next to the exe, or in `%APPDATA%\JPEGView\`) and set
+`AutoCropOnMouseRelease=true`.
 
 Everything else works like normal JPEGView: arrow keys to move between photos,
 `+`/`-` to zoom, `F11` for fullscreen, `F1` for the built-in help.

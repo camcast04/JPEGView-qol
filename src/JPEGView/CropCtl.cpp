@@ -297,9 +297,45 @@ void CCropCtl::EndCropping(bool bShowMenu) {
 			// Releasing the left mouse button crops immediately (AutoCropOnMouseRelease INI setting).
 			m_pMainDlg->ExecuteCommand(IDM_CROP_SEL);
 		} else {
-			ShowCropContextMenu();
+			// Keep the selection alive after releasing the mouse: drag inside it to move it, drag its
+			// handles to resize it. Crop with IDM_CROP_SEL (Ctrl+X/M), cancel with Esc or by clicking
+			// outside the selection, or right-click it for the crop menu.
+			// Same state the crop menu's mode commands set up, see end of ShowCropContextMenu().
+			NormalizeCroppingRect();
+			m_eHitHandle = HH_Border;
+			m_bDoCropping = false;
+			m_bTrackingMode = true;
+			m_bDontStartCropOnNextClick = true;
 		}
 	}
+}
+
+bool CCropCtl::SnapSelectionToSquare() {
+	if (!m_bCropping || m_bDoCropping || m_bDoTracking || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+		return false; // no selection, or still being dragged (the drag code itself handles Shift)
+	}
+	CJPEGImage* pImage = m_pMainDlg->GetCurrentImage();
+	if (pImage == NULL) {
+		return false;
+	}
+	NormalizeCroppingRect();
+	int nW = m_cropEnd.x - m_cropStart.x;
+	int nH = m_cropEnd.y - m_cropStart.y;
+	if (nW == nH) {
+		return true; // already square
+	}
+	// grow to the larger dimension so the square still covers the selected subject, limited by the image
+	int nSide = min(max(nW, nH), min(pImage->OrigWidth() - 1, pImage->OrigHeight() - 1));
+	int nX = (m_cropStart.x + m_cropEnd.x) / 2 - nSide / 2;
+	int nY = (m_cropStart.y + m_cropEnd.y) / 2 - nSide / 2;
+	nX = max(0, min(nX, pImage->OrigWidth() - 1 - nSide));
+	nY = max(0, min(nY, pImage->OrigHeight() - 1 - nSide));
+	InvalidateSceenCropRect();
+	m_cropStart = CPoint(nX, nY);
+	m_cropEnd = CPoint(nX + nSide, nY + nSide);
+	InvalidateSceenCropRect();
+	m_pMainDlg->Invalidate(FALSE);
+	return true;
 }
 
 void CCropCtl::AbortCropping() {

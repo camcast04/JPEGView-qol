@@ -51,6 +51,10 @@ public:
 	void EndCropping(bool bShowMenu);
 	void AbortCropping();
 
+	// Snaps a pending (not actively dragged) selection to a 1:1 square around its center.
+	// Returns false if there is no such selection.
+	bool SnapSelectionToSquare();
+
 	void CancelCropping() { m_bCropping = false; m_bDoCropping = false; }
 	void ResetStartCropOnNextClick() { m_bDontStartCropOnNextClick = false; }
 

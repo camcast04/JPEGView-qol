@@ -76,7 +76,7 @@ Ctrl+O                  IDM_OPEN
 Ctrl+P                  IDM_PRINT
 Ctrl+R                  IDM_RELOAD
 Alt+R                   IDM_SLIDESHOW_RESUME
-Ctrl+X                  IDM_COPY_FULL
+Ctrl+X                  IDM_CROP_SEL
 Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
@@ -84,8 +84,9 @@ T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
 W                       IDM_EXPLORE
 Shift+F12               IDM_ALWAYS_ON_TOP
 
-// Crop mode presets: press a digit, then drag a selection - the crop happens when the mouse button is released
-// (see AutoCropOnMouseRelease in JPEGView.ini). Holding Shift while dragging forces a square selection once.
+// Crop mode presets: press a digit to lock the selection shape, drag a selection, adjust it after releasing
+// the mouse, then press Ctrl+X (or M) to crop (see AutoCropOnMouseRelease in JPEGView.ini for instant crop).
+// Holding Shift while dragging forces a square selection once.
 1                       IDM_CROPMODE_1_1
 2                       IDM_CROPMODE_4_3
 3                       IDM_CROPMODE_3_2

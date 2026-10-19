@@ -960,13 +960,16 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == VK_ESCAPE && m_pCropCtl->IsCropping()) {
 		bHandled = true;
 		m_pCropCtl->AbortCropping();
+	} else if (wParam == VK_SHIFT && m_pCropCtl->IsCropping()) {
+		// Shift snaps a pending (already released) selection to a 1:1 square
+		bHandled = m_pCropCtl->SnapSelectionToSquare();
 	} else if (!bCtrl && wParam != VK_ESCAPE && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initial directory has no images
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
-	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
-		// Start the slideshow
+	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl) && m_pKeyMap->GetCommandIdForKey((int)wParam, bAlt, bCtrl, bShift) <= 0) {
+		// Start the slideshow (only when the digit is not bound in the keymap, e.g. to a crop mode preset)
 		bHandled = true;
 		int nValue = (int)wParam - '1' + 1;
 		if (bCtrl && bShift) {

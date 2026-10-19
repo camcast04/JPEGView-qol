@@ -236,9 +236,10 @@ ExchangeXButtons=true
 ; Set this to false to only use selection mode when CTRL is pressed
 DefaultSelectionMode=true
 
-; When true, releasing the left mouse button after dragging a selection rectangle crops the image immediately.
-; Set to false to get the original behavior (a context menu is shown instead of cropping).
-AutoCropOnMouseRelease=true
+; When false (default), the selection stays after releasing the mouse: drag inside it to move it, drag its
+; corners to resize it, press Ctrl+X (or M) to crop, Esc to cancel, or right-click it for the crop menu.
+; When true, releasing the left mouse button crops the image immediately.
+AutoCropOnMouseRelease=false
 
 ; Zoom speed with mouse wheel, 1.0 means default speed, smaller values slower zoom, larger faster zoom
 MouseWheelZoomSpeed=1.0

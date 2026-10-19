@@ -1,7 +1,8 @@
 // This file defines custom key mapping for JPEGView
 // See KeyMap-README.html for more information on how to customize this file.
 
-// Map M to crop the selected area
+// Map Ctrl+X and M to crop the selected area
+Ctrl+X                  IDM_CROP_SEL
 M                       IDM_CROP_SEL
 
 // Map Ctrl+Up to save without prompt
@@ -17,8 +18,9 @@ X                       IDM_SORT_MOD_DATE
 Up                      IDM_ROTATE_270
 Down                    IDM_ROTATE_90
 
-// Crop mode presets: press a digit, then drag a selection - the crop happens when the mouse button is released
-// (see AutoCropOnMouseRelease in JPEGView.ini). Holding Shift while dragging forces a square selection once.
+// Crop mode presets: press a digit to lock the selection shape, drag a selection, adjust it after releasing
+// the mouse, then press Ctrl+X (or M) to crop (see AutoCropOnMouseRelease in JPEGView.ini for instant crop).
+// Holding Shift while dragging forces a square selection once.
 1                       IDM_CROPMODE_1_1
 2                       IDM_CROPMODE_4_3
 3                       IDM_CROPMODE_3_2
