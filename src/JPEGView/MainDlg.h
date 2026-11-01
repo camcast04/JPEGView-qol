@@ -77,6 +77,7 @@ public:
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_MOUSEWHEEL, OnMouseWheel)
 		MESSAGE_HANDLER(WM_KEYDOWN, OnKeyDown)
+		MESSAGE_HANDLER(WM_KEYUP, OnKeyUp)
 		MESSAGE_HANDLER(WM_SYSKEYDOWN, OnSysKeyDown)
 		MESSAGE_HANDLER(WM_GETDLGCODE, OnGetDlgCode)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
@@ -119,6 +120,7 @@ public:
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnKeyUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnSysKeyDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnGetDlgCode(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -333,6 +335,7 @@ private:
 	bool m_bWindowBorderless;
 	bool m_bAlwaysOnTop;
 	bool m_bSelectZoom;  // keeps track of select-to-zoom mode when CTRL+SHIFT+LMouse
+	bool m_bShiftTapPending; // Shift went down on its own while a crop selection was pending; snapped to square on key up (see OnKeyUp)
 
 	void ExploreFile();
 	bool OpenFileWithDialog(bool bFullScreen, bool bAfterStartup);

@@ -268,6 +268,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bWindowBorderless = sp.WindowBorderlessOnStartup();  // unlike AlwaysOnTop, this is set early on initialize as it affects calculations of the window size, position, etc
 	m_bAlwaysOnTop = false;  // default normal window.  this will be set to true when AlwaysOnTop is toggled if set to startup in INI
 	m_bSelectZoom = false;  // this value is set when LButtonDown happens, to be read by LButtonUp
+	m_bShiftTapPending = false;
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -948,10 +949,17 @@ LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 	return 0;
 }
 
+static bool IsWinKeyDown() {
+	return (::GetKeyState(VK_LWIN) & 0x8000) != 0 || (::GetKeyState(VK_RWIN) & 0x8000) != 0;
+}
+
 LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	if (wParam != VK_SHIFT) {
+		m_bShiftTapPending = false; // Shift is acting as a modifier for this key, not as a tap on its own
+	}
 	if (m_pPanelMgr->OnKeyDown((unsigned int)wParam, bShift, bAlt, bCtrl)) {
 		return 1; // a panel has handled the key
 	}
@@ -962,8 +970,15 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		bHandled = true;
 		m_pCropCtl->AbortCropping();
 	} else if (wParam == VK_SHIFT && m_pCropCtl->IsCropping()) {
-		// Shift snaps a pending (already released) selection to a 1:1 square
-		bHandled = m_pCropCtl->SnapSelectionToSquare();
+		bHandled = true;
+		if (m_pCropCtl->IsDoCropping()) {
+			// mouse button still down: square the drag right away
+			m_pCropCtl->SnapSelectionToSquare();
+		} else if (!bCtrl && !bAlt && !IsWinKeyDown()) {
+			// Pending selection: snap on key up, and only if Shift was tapped on its own. Some keys
+			// (e.g. the Copilot key, even when remapped to Ctrl) send Shift as part of a key chord.
+			m_bShiftTapPending = true;
+		}
 	} else if (!bCtrl && wParam != VK_ESCAPE && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initial directory has no images
 		bHandled = true;
@@ -1002,7 +1017,22 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	return 1;
 }
 
+LRESULT CMainDlg::OnKeyUp(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled) {
+	if (wParam == VK_SHIFT && m_bShiftTapPending) {
+		m_bShiftTapPending = false;
+		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+		bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+		if (!bCtrl && !bAlt && !IsWinKeyDown() && m_pCropCtl->IsCropping()) {
+			m_pCropCtl->SnapSelectionToSquare();
+		}
+		return 1;
+	}
+	bHandled = FALSE;
+	return 0;
+}
+
 LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	m_bShiftTapPending = false; // Alt combination, not a Shift tap
 	if (m_pPanelMgr->IsModalPanelShown()) {
 		return 1;
 	}
