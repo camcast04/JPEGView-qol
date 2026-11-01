@@ -46,6 +46,16 @@ Requirements: 64-bit Windows 7 or later. If the program complains about missing
 `VCRUNTIME140.dll`, install the Microsoft Visual C++ Redistributable (x64) from
 https://aka.ms/vs/17/release/vc_redist.x64.exe and run it again.
 
+### Updating to a newer version
+
+No uninstall needed — new versions are the same zip with newer files inside:
+
+1. Close JPEGView if it's running.
+2. Download the newest `JPEGView-custom-x64.zip` from the **Releases** page.
+3. Unzip it into the same folder as before and choose **Replace the files** when
+   Windows asks. (Deleting the old folder first and unzipping fresh works too.)
+4. Open JPEGView again. Your settings and file associations are kept.
+
 ### Option B - Build it from source yourself
 
 Only needed if you want to modify the code or no zip is available.
